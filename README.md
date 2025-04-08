@@ -1,121 +1,113 @@
-# 🔥 DSA Tracker - Backend API
+# 💻 DSA Tracker Backend (Advanced)
 
-Track your daily DSA progress, maintain solving streaks, and get automatic email reminders — powered by **Spring Boot**.
-
----
-
-## 📌 Overview
-
-This backend system allows users to:
-- ✅ Track daily DSA streaks
-- 📬 Receive email reminders for inactivity
-- 🔐 Secure login with Spring Security
-- 📊 View their complete streak history
+Track your daily DSA progress, maintain solving streaks, and get automatic reminders — powered by **Spring Boot**.  
+This backend serves as the core of your DSA Tracker app — handling users, streaks, scheduling, and more.
 
 ---
 
-## 🚀 Tech Stack
+## 🚀 Features
 
-- **Java 17**
-- **Spring Boot**
-- **Spring Security**
-- **Spring Data JPA**
-- **Spring Scheduler**
-- **MySQL / PostgreSQL**
-- **Java Mail Sender**
+- 🔐 User authentication with Spring Security
+- 📈 Daily streak tracking per user
+- ⏰ Scheduled updates at midnight
+- 📬 Reminder emails for inactive users
+- 🗂️ Well-structured service and scheduler layers
 
 ---
 
-## 🗂 Project Structure
+## 🛠 Tech Stack
 
-dsa_tracker_adv/ ├── entity/ # User and Streak entity classes ├── repository/ # Spring Data JPA interfaces ├── scheduler/ # Cron jobs for updating streaks and sending reminders ├── service/ # Core business logic ├── controller/ # (Expected in full app) └── application.properties # DB and mail configuration
-
-yaml
-Copy
-Edit
-
----
-
-## 🔑 Key Features
-
-### ✅ `StreakService.java`
-- Tracks daily solving streaks
-- Saves streak only once per day
-- Updates user's `lastActiveDate` and `streakCount`
-
-### ⏰ `StreakScheduler.java`
-- Runs **every midnight**
-- Checks user activity and updates streak
-
-### 📧 `ReminderScheduler.java`
-- Runs **every morning**
-- Sends email to users inactive yesterday
-
-### 🔐 `UserDetailsServiceImpl.java`
-- Loads user by username
-- Supports Spring Security authentication
+- Java 21
+- Spring Boot
+- Spring Security
+- Spring Data JPA
+- Spring Scheduler
+- Java Mail Sender
+- MySQL / PostgreSQL
 
 ---
 
-## ⚙️ Configuration
 
-Update your `application.properties`:
+---
+
+## ⚙️ Configuration (application.properties)
 
 ```properties
-# Database
+# Database Config
 spring.datasource.url=jdbc:mysql://localhost:3306/dsa_db
-spring.datasource.username=root
-spring.datasource.password=yourpassword
+spring.datasource.username=your_db_username
+spring.datasource.password=your_db_password
 spring.jpa.hibernate.ddl-auto=update
 
-# Email Configuration
+# Email Config
 spring.mail.username=youremail@gmail.com
-spring.mail.password=your-app-password
+spring.mail.password=your_app_password
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
-⏰ CRON Jobs
-Task	CRON Expression	Purpose
-Update Streak	0 0 0 * * ?	Every midnight
-Send Reminders	0 30 9 * * ?	Every day at 9:30 AM
-Test CRON (dev)	0 * * * * ?	Every minute for testing
-▶️ How to Run
+
+
+🧠 Key Classes Overview
+✅ StreakService.java
+Checks if the user solved any problem today
+
+Continues streak if solved yesterday, resets otherwise
+
+Updates last active date and current streak count
+
+⏰ StreakScheduler.java
+Runs daily at midnight (00:00) via @Scheduled(cron = "0 0 0 * * ?")
+
+Iterates all users and updates streaks via streakService.updateStreak(userId)
+
+📬 ReminderScheduler.java
+Runs daily at 9:30 AM
+
+Sends email to users who were inactive yesterday
+
+🔐 UserDetailsServiceImpl.java
+Supports Spring Security
+
+Loads user from DB by username during login
+
+⏰ Scheduler Timing Summary
+Job Name	Purpose	Cron Expression
+Update Streak	Update user streak at midnight	0 0 0 * * ?
+Send Reminders	Email users inactive yesterday	0 30 9 * * ?
+▶️ Run Locally
 bash
 Copy
 Edit
-# Clone the repo
+# Clone the repository
 git clone https://github.com/your-username/dsa-tracker-backend.git
 cd dsa-tracker-backend
 
-# Run the Spring Boot app
+# Run with Maven
 ./mvnw spring-boot:run
-📬 Test Email Reminders
-Add a test user who didn’t solve yesterday
+🔒 Security
+Passwords stored securely using Spring Security
 
-Temporarily set CRON to every minute:
+Supports login via UserDetailsServiceImpl
 
-java
-Copy
-Edit
-@Scheduled(cron = "0 * * * * ?")
-Check email inbox/logs for result
+📬 Sample Email Reminder
+Subject: Don’t lose your streak!
+Body: You didn’t solve any DSA problems yesterday. Solve today to keep the streak alive! 💪
 
-👤 Author
+🧩 Future Enhancements
+ Add leaderboard by longest streak
+
+ Add REST APIs for frontend
+
+ Implement JWT authentication
+
+ Add solved problem tracking
+
+🙋‍♂️ Author
 Vishal Jain
-🎓 MCA | 💻 Java Full Stack Developer | 🧠 DSA & Backend Enthusiast
+🚀 MCA | Java Backend Developer | DSA Enthusiast
 🌐 Portfolio
 🔗 LinkedIn
 
-⭐ Support
-If this project helped you, star the repository — it means a lot and encourages future improvements 🙌
-
-📈 Future Roadmap
- Add JWT-based login system
-
- Build leaderboard by user streak
-
- Add frontend (React/Next.js)
-
- Track questions attempted & time spent
-
+🌟 Star the Repo
+If this helped you or inspired your own project, feel free to ⭐ star this repository. It helps others discover it and supports continued development!
